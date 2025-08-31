@@ -40,6 +40,9 @@ int esMayusculaLetraODigito(char c);
 void convertirAMayusculas(char *str);
 int adultoExiste(Adulto **adultos, int totalAdultos, const char *curp);
 int dependienteExiste(Adulto *adulto, const char *curp);
+int telefonoExiste(Adulto **adultos, int totalAdultos, const char *telefono);
+int validarTelefono(const char *telefono);
+int validarDistrito(unsigned char distrito);
 void liberarMemoria(Adulto **adultos, int totalAdultos);
 void guardarEnArchivo(Adulto **adultos, int totalAdultos);
 int cargarDesdeArchivo(Adulto ***adultos, int *totalAdultos);
@@ -189,6 +192,36 @@ int dependienteExiste(Adulto *adulto, const char *curp) {
         }
     }
     return 0;
+}
+
+// Verificar si un teléfono ya existe
+int telefonoExiste(Adulto **adultos, int totalAdultos, const char *telefono) {
+    for (int i = 0; i < totalAdultos; i++) {
+        if (strcmp(adultos[i]->telefono, telefono) == 0) {
+            return 1;
+        }
+    }
+    return 0;
+}
+
+// Validar formato de teléfono (10 dígitos)
+int validarTelefono(const char *telefono) {
+    if (strlen(telefono) != 10) {
+        return 0;
+    }
+    
+    for (int i = 0; i < 10; i++) {
+        if (!isdigit(telefono[i])) {
+            return 0;
+        }
+    }
+    
+    return 1;
+}
+
+// Validar distrito (1-9)
+int validarDistrito(unsigned char distrito) {
+    return (distrito >= 1 && distrito <= 9);
 }
 
 // Liberar memoria dinámica
@@ -467,6 +500,7 @@ void guardarEnArchivo(Adulto **adultos, int totalAdultos) {
 void registrarAdulto(Adulto ***adultos, int *totalAdultos) {
     char buffer[100];
     int edad;
+    unsigned char distritoTemp;
     
     // Asignar memoria para el nuevo adulto
     Adulto *nuevoAdulto = (Adulto*)malloc(sizeof(Adulto));
@@ -547,14 +581,39 @@ void registrarAdulto(Adulto ***adultos, int *totalAdultos) {
     buffer[strcspn(buffer, "\n")] = 0;
     nuevoAdulto->direccion.colonia = strdup(buffer);
     
-    printf("Distrito (1-255): ");
-    scanf("%hhu", &nuevoAdulto->direccion.distrito);
-    while(getchar() != '\n'); // Limpiar buffer
+    // Validar distrito (1-9)
+    do {
+        printf("Distrito (1-9): ");
+        if (scanf("%hhu", &distritoTemp) != 1) {
+            printf("Entrada inválida. ");
+            while(getchar() != '\n'); // Limpiar buffer
+            continue;
+        }
+        while(getchar() != '\n'); // Limpiar buffer
+        
+        if (!validarDistrito(distritoTemp)) {
+            printf("Distrito inválido. Debe ser un número entre 1 y 9.\n");
+        } else {
+            nuevoAdulto->direccion.distrito = distritoTemp;
+            break;
+        }
+    } while (1);
     
-    // Solicitar teléfono
-    printf("Teléfono (10 dígitos): ");
-    scanf("%10s", nuevoAdulto->telefono);
-    while(getchar() != '\n'); // Limpiar buffer
+    // Validar teléfono (10 dígitos)
+    do {
+        printf("Teléfono (10 dígitos): ");
+        scanf("%10s", buffer);
+        while(getchar() != '\n'); // Limpiar buffer
+        
+        if (!validarTelefono(buffer)) {
+            printf("Teléfono inválido. Debe tener exactamente 10 dígitos.\n");
+        } else if (telefonoExiste(*adultos, *totalAdultos, buffer)) {
+            printf("Este teléfono ya está registrado. Intente con otro.\n");
+        } else {
+            strcpy(nuevoAdulto->telefono, buffer);
+            break;
+        }
+    } while (1);
     
     // Solicitar email
     printf("Email: ");
