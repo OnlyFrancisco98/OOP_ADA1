@@ -1,0 +1,28 @@
+=== REGISTRO DE VOTANTES ===
+
+Total de adultos registrados: 3
+
+ADULTO 1:
+  CURP: GOME800101HDFTRR01
+  Nombre: Juan Carlos Gomez Perez
+  Dirección: Calle Principal 123, Col. Centro, Distrito 5
+  Teléfono: 5512345678
+  Email: juan@email.com
+  Dependientes: 0
+
+ADULTO 2:
+  CURP: RODR900215MDFMSS02
+  Nombre: Maria Elena Rodriguez Sanchez
+  Dirección: Avenida Siempre Viva 456, Col. Reforma, Distrito 3
+  Teléfono: 5512345679
+  Email: maria@email.com
+  Dependientes: 0
+
+ADULTO 3:
+  CURP: LOPA950630MDFTRR03
+  Nombre: Laura Isabel Lopez Torres
+  Dirección: Calle Secundaria 789, Col. Juarez, Distrito 7
+  Teléfono: 5512345680
+  Email: laura@email.com
+  Dependientes: 0
+
